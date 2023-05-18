@@ -1,0 +1,73 @@
+﻿@page "/menu/edit/{id:int}"
+
+@using Blazored.SessionStorage;
+@using Catering.WebAssembly.Services;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers.Common.Requests;
+@using CateringApi.Helpers;
+@using Catering.WebAssembly.Services.Interfaces;
+
+@inject IJSRuntime Js
+@inject IMenuService MenuService
+@inject IFoodItemService ItemService
+@inject NavigationManager NavManager
+@inject ISessionStorageService SessionStorage
+@attribute [Authorize(Roles = RoleName.Cook)]
+
+<h3 class="text-center">Edit Menu</h3>
+<hr />
+<div class="row">
+	<div class="col-md-10">
+		<div class="row">
+			<div class="col-md-10 offset-2">
+				<EditForm Model="menuRequest" OnValidSubmit="@HandleValidRequest">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Date</label>
+								<InputDate class="form-control" min="@minDate" @bind-Value="@menuRequest.Date"></InputDate>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Add Items</label>
+								<select class="form-control food-selection" @ref="_selectReference" @onchange="OnSelectionChanged" multiple>
+									@foreach (var item in _foodItems)
+									{
+										<option value="@item.Id" selected="@foodIds.Contains(item.Id)">@item.Name</option>
+									}
+								</select>
+							</div>
+						</div>
+						<div>
+							<button type="submit" class="btn btn-success">Submit</button>
+							<a @onclick="@GoToMenu" class="btn btn-primary">Back</a>
+						</div>
+					</div>
+				</EditForm>
+				<p style="color: red">@message</p>
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-md-6 offset-3">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Current Food Items</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in existingMenu.FoodItems)
+				{
+					<tr>
+						<td>@item.Name</td>
+						<td><button id="@item.Id" @onclick="() => DeleteItem(item.Id)" class='btn btn-danger'>Remove</button></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

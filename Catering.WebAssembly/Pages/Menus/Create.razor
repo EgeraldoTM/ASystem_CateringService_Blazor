@@ -1,0 +1,54 @@
+﻿@page "/menu/create"
+
+@using Blazored.SessionStorage;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers.Common.Requests;
+@using Catering.WebAssembly.Services;
+@using CateringApi.Helpers;
+@using Catering.WebAssembly.Services.Interfaces;
+
+@inject IMenuService MenuService
+@inject IFoodItemService FoodItemService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime Js
+@inject ISessionStorageService SessionStorage
+@attribute [Authorize(Roles = RoleName.Cook)]
+
+<PageTitle>New Menu</PageTitle>
+
+<h2 class="text-center">New Menu</h2>
+<hr />
+<div class="row">
+	<div class="col-md-10">
+		<div class="row">
+			<div class="col-md-10 offset-2">
+				<EditForm Model="_menu" OnValidSubmit="@HandleValidRequest">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Date</label>
+								<InputDate class="form-control" min="@minDate" @bind-Value="@_menu.Date"></InputDate>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Food Name</label>
+								<select class="form-control food-selection" @ref="_selectReference" @onchange="OnSelectionChanged" multiple>
+								@foreach (var item in _foodItems)
+								{
+								<option value="@item.Id" selected="@foodIds.Contains(item.Id)">@item.Name</option>
+								}
+								</select>
+							</div>
+						</div>
+						<div>
+							<button type="submit" class="btn btn-success">Create</button>
+							<a @onclick="@GoToMenu" class="btn btn-primary">Back</a>
+						</div>
+					</div>
+					<p style="color: red">@message</p>
+				</EditForm>
+			</div>
+		</div>
+	</div>
+</div>

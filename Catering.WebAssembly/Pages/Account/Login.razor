@@ -1,0 +1,46 @@
+﻿@page "/login"
+
+@using Blazored.SessionStorage;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers.Common.Requests;
+@using Catering.WebAssembly.Services;
+@using Catering.WebAssembly.Services.Interfaces;
+
+@inject NavigationManager NavManager
+@inject IAuthService AuthService
+@inject ISessionStorageService SessionStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div class="offset-4">
+	<div class="col-6 text-center">
+		<h1><b>Catering Service</b></h1>
+	</div>
+	<br />
+	<br />
+	<div class="col-md-6 col-md-offset-2 text-center">
+		<section>
+			<EditForm Model="user" OnValidSubmit="@HandleValidRequest">
+				<div class="form-floating">
+					<InputText class="form-control" @bind-Value="user.Email"></InputText>
+					<label class="form-label">Email</label>
+				</div>
+				<br />
+				<div class="form-floating">
+					<InputText class="form-control" type="password" @bind-Value="user.Password"></InputText>
+					<label class="form-label">Password</label>
+				</div>
+				<br />
+				<div>
+					<button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+				</div>
+				<br />
+				<div>
+					<p>
+						<a class="btn btn-success" @onclick="GoToRegister">Register as a new user</a>
+					</p>
+				</div>
+				<p style="color: red">@message</p>
+			</EditForm>
+		</section>
+	</div>
+</div>

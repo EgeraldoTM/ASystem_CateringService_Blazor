@@ -1,0 +1,79 @@
+﻿@page "/Order"
+
+@using Blazored.SessionStorage;
+@using Catering.WebAssembly.Services.Interfaces;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers;
+@inject IOrderService OrderService
+@inject AuthenticationStateProvider AuthState
+@inject ISessionStorageService SessionStorage
+@attribute [Authorize(Roles = RoleName.Employee)]
+
+<PageTitle>Order</PageTitle>
+
+<h3>Order</h3>
+
+<div class="col-md-4">
+	<div class="row">
+		<div class="col">
+			<InputDate @bind-Value="searchDate" class="form-control" />
+		</div>
+		<div class="col">
+			<button @onclick="@SearchForDay" class="btn btn-outline-success">Search</button>
+		</div>
+	</div>
+</div>
+
+@if (_order == null)
+{
+	<div class="row">
+		<div class="col-md-6 offset-3 text-center">
+			<h2>No order placed for this day</h2>
+			<hr />
+		</div>
+	</div>
+	<a href="@($"menu")" class="btn btn-primary">Go to menu</a>
+}
+else
+{
+	<div class="row">
+		<div class="col-md-8 offset-2">
+			<p>
+				<h4>Your Order</h4>
+			</p>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Items</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="align-middle">
+							<ul style="list-style-type:none">
+								@foreach (var detail in _order.Details)
+								{
+									<li>
+										<div class="alert alert-info" role="alert">
+											<span class="badge bg-success">@detail.Quantity</span> [@detail.Price.ToString("c")] - @detail.FoodItem.Name
+										</div>
+									</li>
+								}
+							</ul>
+						</td>
+						<td class="align-middle">
+							@_order.Details.Select(m => m.Price * m.Quantity).Sum().ToString("c")
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			@if (_order.OrderPlaced.Date == DateTime.Now.Date @*&& DateTime.Now.TimeOfDay < TimeSpan.Parse("11:00")*@)
+			{
+				<a href="@($"order/edit/{_order.Id}")" class="btn btn-primary">Edit Order</a>
+			}
+		</div>
+		<p style="color: red;">@message</p>
+	</div>
+}

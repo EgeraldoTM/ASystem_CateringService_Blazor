@@ -1,0 +1,45 @@
+﻿@page "/fooditems"
+
+@using Blazored.SessionStorage;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers;
+@using Catering.WebAssembly.Services.Interfaces;
+
+@inject IFoodItemService FoodItemService
+@inject ISessionStorageService SessionStorage;
+@attribute [Authorize]
+
+<PageTitle>Food Items</PageTitle>
+
+<AuthorizeView Roles="@RoleName.Cook">
+	<a href="@("/fooditems/details")" class="btn btn-success">New Food Item</a>
+</AuthorizeView>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>Price</th>
+			<AuthorizeView Roles="@RoleName.Cook">
+				<th>Manage</th>
+			</AuthorizeView>
+			
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in foodItems!)
+		{
+			<tr>
+				<td>@item.Name</td>
+				<td>@item.Description</td>
+				<td>@item.Category!.Name</td>
+				<td>@item.Price</td>
+				<AuthorizeView Roles="@RoleName.Cook">
+					<td><a href="@($"fooditems/details/{item.Id}")" class="btn btn-warning">Edit</a></td>
+				</AuthorizeView>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,57 @@
+﻿@page "/register"
+
+@using Blazored.SessionStorage;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers.Common.Requests;
+@using Catering.WebAssembly.Services;
+@using Catering.WebAssembly.Services.Interfaces;
+
+@inject NavigationManager NavManager
+@inject IAuthService AuthService
+@inject ISessionStorageService SessionStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h2 class="text-center">Create a new account</h2>
+<hr />
+<div class="container" style="width: 100%; display:flex; justify-content: center;">
+	<div class="col-md-10 mx-auto" style="width: 50%;">
+		@*<div class="row">*@
+		<EditForm Model="newUser" OnValidSubmit="@HandleValidRequest">
+			<div class="form-floating">
+				<InputText class="form-control" @bind-Value="@newUser.FirstName"></InputText>
+				<label>First Name</label>
+			</div>
+			<br />
+			<div class="form-floating">
+				<InputText class="form-control" @bind-Value="@newUser.LastName"></InputText>
+				<label>Last Name</label>
+			</div>
+			<br />
+			<div>
+				<div class="form-floating">
+					<InputText class="form-control" @bind-Value="@newUser.Email"></InputText>
+					<label>Email</label>
+				</div>
+			</div>
+			<br />
+			<div class="form-floating">
+				<InputDate class="form-control" max="@maxDate" min="@minDate" @bind-Value="@newUser.Birthday"></InputDate>
+				<label>Birthday</label>
+			</div>
+			<br />
+			<div class="form-floating">
+				<InputText class="form-control" type="password" @bind-Value="newUser.Password"></InputText>
+				<label>Password</label>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-md-4 mx-auto">
+					<button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+				</div>
+				<p class="text-center">Already have an account? <a class="link" style="cursor: pointer;" @onclick="@GoToLogin">Sign in</a></p>
+			</div>
+			<p style="color: red">@message</p>
+		</EditForm>
+		@*</div>*@
+	</div>
+</div>

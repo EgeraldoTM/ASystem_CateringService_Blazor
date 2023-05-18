@@ -1,0 +1,132 @@
+﻿@page "/fooditems/details"
+@page "/fooditems/details/{id:int}"
+
+@using CateringApi.Helpers.Common.DTOs;
+@using Catering_WebAssembly.Services;
+@inject IFoodItemService FoodItemService
+@inject NavigationManager NavigationManager
+
+@if (Id is not null)
+{
+	<PageTitle>New Item</PageTitle>
+
+	<h3>New Item</h3>
+}
+else
+{
+	<PageTitle>Manage Item</PageTitle>
+
+	<h3>Manage Item</h3>
+
+}
+
+<div class="row">
+	<EditForm Model="@FoodItem" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="@HandleFailedRequest">
+		<div class="form-group">
+			<label class="col-md-3">Name</label>
+			<InputText class="col-md-8 form-control" @bind-Value="@FoodItem.Name"></InputText>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3">Description</label>
+			<InputText class="col-md-8 form-control" @bind-Value="@FoodItem.Description"></InputText>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3">Category</label>
+			<InputSelect class="col-md-8 form-control" @bind-Value="@FoodItem.CategoryId">
+				<option value="1">Salads</option>
+				<option value="2">Entrees</option>
+				<option value="3">Deserts</option>
+				<option value="4">Beverages</option>
+				<option value="5">Fruits</option>
+			</InputSelect>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3">Price</label>
+			<InputNumber class="col-md-8 form-control" @bind-Value="@FoodItem.Price"></InputNumber>
+		</div>
+		<br />
+		<div class="form-group">
+			<button type="submit" class="btn btn-warning">Save</button>
+			<a @onclick="@GoToFoodItems" class="btn btn-primary">Back</a>
+
+			@if (Id is not null)
+			{
+				<a @onclick="@DeleteItem" class="btn btn-danger">Delete</a>
+			}
+
+		</div>
+		<p style="color: red">@Message</p>
+	</EditForm>
+</div>
+
+@code {
+
+	[Parameter]
+	public int? Id { get; set; }
+
+	protected string Message = string.Empty;
+
+	protected FoodItemDto FoodItem { get; set; } = new();
+
+	protected async override Task OnInitializedAsync()
+	{
+		if (Id is null)
+		{
+
+		}
+		else
+		{
+			var foodItemDto = await FoodItemService.Get(Id.Value);
+
+			if (foodItemDto is not null)
+				FoodItem = foodItemDto;
+		}
+	}
+
+	protected void GoToFoodItems()
+	{
+		NavigationManager.NavigateTo("/FoodItems");
+	}
+
+	protected async Task DeleteItem()
+	{
+		if (Id is not null)
+		{
+			var result = await FoodItemService.Delete(Id.Value);
+
+			if (result)
+				NavigationManager.NavigateTo("/fooditems");
+			else
+				Message = "Something unexpected happened, could not delete item.";
+		}
+	}
+
+	protected async Task HandleValidRequest()
+	{
+		if (Id is null)
+		{
+			var result = await FoodItemService.Create(FoodItem);
+
+			if (result is not null)
+				NavigationManager.NavigateTo("/fooditems");
+			else
+				Message = "Something went wrong, Item could not be added.";
+
+		}
+		else
+		{
+			var result = await FoodItemService.Update(FoodItem);
+
+			if (result)
+				NavigationManager.NavigateTo("/fooditems");
+			else
+				Message = "Something went wrong, Item could not be updated.";
+
+		}
+	}
+
+	protected async Task HandleFailedRequest()
+	{
+		await Task.FromResult(Message = "Something went wrong, form not submited.");
+	}
+}

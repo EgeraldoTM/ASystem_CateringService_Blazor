@@ -1,0 +1,40 @@
+﻿@page "/"
+@using CateringApi.Helpers;
+
+<PageTitle>Index</PageTitle>
+
+<AuthorizeView>
+	<Authorized>
+		<div class="row">
+			<div class="text-center">
+				<h1 id="title"><b>Welcome To Our Catering Service!</b></h1>
+				<br />
+				<br />
+				<h3 style="text-align:left;">Based on your role in the company you can create food items and a daily menu or order food present on the menu.</h3>
+				<div class="alert alert-secondary mt-4">
+					<span>
+						Every day a menu is
+						prepared and displayed. The employees are free to place orders up to 11 o’clock every
+						morning. Placing the orders beforehand allows the cooks to understand how much of each food to prepare.
+					</span>
+				</div>
+				<h4><b>Enjoy!</b></h4>
+			</div>
+		</div>
+	</Authorized>
+	<NotAuthorized>
+		<div class="row">
+			<div class="text-center">
+				<h1 id="title"><b>Catering Service</b></h1>
+				<h2>Hello, Guest!</h2>
+			</div>
+		</div>
+		<div class="alert alert-secondary mt-4">
+			<strong>Are you hungry?</strong>
+
+			<span class="text-nowrap">
+				Login at top right to get a taste of today's delicious recipes!
+			</span>
+		</div>
+	</NotAuthorized>
+</AuthorizeView>

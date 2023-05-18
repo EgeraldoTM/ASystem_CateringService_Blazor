@@ -1,0 +1,41 @@
+﻿@page "/counter"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+@foreach(var str in methodCalls)
+{
+	<p>@str</p>
+}
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+	private int currentCount = 0;
+
+	private List<string> methodCalls = new();
+
+
+	private void IncrementCount()
+	{
+		currentCount++;
+	}
+
+	protected override void OnInitialized()
+	{
+		methodCalls.Insert(0, "OnInitialized");
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		methodCalls.Insert(0, "OnAfterRender");
+	}
+
+	protected override void OnParametersSet()
+	{
+		methodCalls.Insert(0, "OnParametersSet");
+	}
+}

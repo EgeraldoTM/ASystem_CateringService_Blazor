@@ -1,0 +1,91 @@
+﻿@page "/menu"
+
+@using Blazored.SessionStorage;
+@using Catering.WebAssembly.Services.Interfaces;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers;
+@using CateringApi.Helpers.Common.Requests;
+
+@inject IMenuService MenuService
+@inject IOrderService OrderService
+@inject IJSRuntime Js
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthState
+@inject ISessionStorageService SessionStorage
+@attribute [Authorize]
+
+<PageTitle>Menu</PageTitle>
+
+<div class="col-md-4">
+	<div class="row">
+		<div class="col">
+			<InputDate @bind-Value="searchDate" class="form-control" />
+		</div>
+		<div class="col">
+			<button @onclick="@SearchForDay" class="btn btn-outline-success">Search</button>
+		</div>
+	</div>
+</div>
+
+<p style="color: red;">@message</p>
+
+@if (!_menu.FoodItems.Any())
+{
+	<div class="row">
+		<div class="col-md-6 offset-3 text-center">
+			<h2>No Menu For This Day!</h2>
+			<hr />
+			<AuthorizeView Roles="@RoleName.Cook">
+				<div>
+					<a href="@($"menu/create")" class="btn btn-success"><i class="bi bi-plus-circle"></i> New Menu</a>
+				</div>
+			</AuthorizeView>
+		</div>
+	</div>
+}
+else
+{
+	<AuthorizeView Roles="@RoleName.Cook">
+		<div>
+			<a href="@($"menu/create")" class="btn btn-success"><i class="bi bi-plus-circle"></i> New Menu</a>
+		</div>
+	</AuthorizeView>
+	<br />
+	<div class="menu">
+		<div class="text-center">
+			<h2><b>The Menu</b></h2>
+		</div>
+		<hr class="dashed-line" />
+		@foreach (var item in _menu.FoodItems)
+		{
+			<div class="item">
+				<h2>@item.Name <span class="w3-right w3-tag w3-dark-grey w3-round">@item.Price.ToString("c")</span></h2>
+				<p class="w3-text-grey">@item.Description</p>
+				@if (_menu.Date.Date == DateTime.Now.Date)
+				{
+					<AuthorizeView Roles="@RoleName.Employee">
+						<span id="indicator">@detailQuantity[item.Id]</span>
+						<button type="button" class="add-button" @onclick="() => AddDetail(item.Id, item.Price)">+</button>
+						<button type="button" class="subtract-button" @onclick="() => RemoveDetail(item.Id)">-</button>
+					</AuthorizeView>
+				}
+			</div>
+		}
+		@if (_menu.Date.Date == DateTime.Now.Date)
+		{
+			<AuthorizeView Roles="@RoleName.Employee">
+				@if (_menu.FoodItems.Any())
+				{
+					<button class="submit-button" @onclick="@CreateOrder">Place Order</button>
+				}
+			</AuthorizeView>
+		}
+		<br>
+	</div>
+	<AuthorizeView Roles="@RoleName.Cook">
+		<div class="manage">
+			<button class="btn btn-danger" @onclick="DeleteMenu">Delete</button>
+			<a href="@($"menu/edit/{_menu.Id}")" class="btn btn-outline-primary">Edit</a>
+		</div>
+	</AuthorizeView>
+}

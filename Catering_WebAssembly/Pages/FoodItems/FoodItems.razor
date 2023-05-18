@@ -1,0 +1,54 @@
+﻿@page "/fooditems"
+
+@using CateringApi.DAL.Models
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers;
+@using Catering_WebAssembly.Services;
+@inject IFoodItemService FoodItemService
+
+<AuthorizeView>
+	<PageTitle>Food Items</PageTitle>
+
+	<a href="@("/fooditems/details")" class="btn btn-success">New Food Item</a>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Category</th>
+				<th>Price</th>
+				<AuthorizeView Context="innerContext" Roles="@RoleName.Cook">
+					<th>Manage</th>
+				</AuthorizeView>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in foodItems!)
+			{
+				<tr>
+					<td>@item.Name</td>
+					<td>@item.Description</td>
+					<td>@item.Category!.Name</td>
+					<td>@item.Price</td>
+					<AuthorizeView Context="innerContext" role="@RoleName.Cook">
+						<td><a href="@($"fooditems/details/{item.Id}")" class="btn btn-warning">Edit</a></td>
+					</AuthorizeView>
+				</tr>
+			}
+		</tbody>
+	</table>
+</AuthorizeView>
+
+@code {
+
+	private List<FoodItemDto>? foodItems = new();
+
+
+	protected async override Task OnInitializedAsync()
+	{
+		var response = await FoodItemService.GetAll();
+
+		foodItems = response == null ? Enumerable.Empty<FoodItemDto>().ToList() : response.ToList();
+	}
+}

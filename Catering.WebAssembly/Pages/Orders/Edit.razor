@@ -1,0 +1,88 @@
+﻿@page "/Order/Edit/{id:int}"
+
+@using Blazored.SessionStorage;
+@using Catering.WebAssembly.Services.Interfaces;
+@using CateringApi.Helpers.Common.DTOs;
+@using CateringApi.Helpers;
+
+@inject IJSRuntime Js
+@inject IOrderService OrderService
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthState
+@inject ISessionStorageService SessionStorage
+@attribute [Authorize(Roles = RoleName.Employee)]
+
+@if (_order is not null)
+{
+	<div class="row">
+		<div class="col-md-10 offset-1">
+			<div class="text-center">
+				<h2>Edit Order</h2>
+			</div>
+			<table id="order" class="table">
+				<thead>
+					<tr>
+						<th>Quantity</th>
+						<th>Item</th>
+						<th>Price</th>
+						<th>Subtotal</th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var detail in _order.Details)
+					{
+						<tr>
+							<td class="align-middle">@detail.Quantity</td>
+							<td class="align-middle">@detail.FoodItem.Name</td>
+							<td class="align-middle">@detail.Price.ToString("c")</td>
+							<td class="align-middle">@((detail.Quantity * detail.Price).ToString("c"))</td>
+							<td class="align-middle">
+								<a class="text-danger" style="cursor:pointer;" @onclick="@(() => SubtractQuantity(detail.Id))"><i class="bi bi-cart-dash"></i></a>
+								|
+								<a class="text-success" style="cursor:pointer;" @onclick="@(() => AddQuantity(detail.Id))"><i class="bi bi-cart-plus"></i></a>
+							</td>
+							<td class="align-middle">
+								<button id="@detail.Id" class="btn btn-danger" @onclick="@(() => RemoveDetail(detail.Id))">Remove</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2"></td>
+						<td><b>Total:</b></td>
+						<td>
+							@total.ToString("c")
+						</td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+
+			@*@if (DateTime.Now.TimeOfDay < TimeSpan.Parse("11:00"))*@
+
+			<div class="text-right">
+				<div class="btn-group">
+					<span style="padding:5px"></span>
+					<a href="@("menu")" class="btn btn-outline-success">Add more items</a>
+					<a href="@("order")" class="btn btn-primary" style="margin-left: 10px">Done</a>
+					<button class="btn btn-danger" @onclick="@DeleteOrder" style="margin-left: 10px">Delete</button>
+				</div>
+			</div>
+			<p style="color:red">@message</p>
+		</div>
+	</div>
+}
+else
+{
+	<div class="row">
+		<div class="col-md-6 offset-3 text-center">
+			<h2>No order placed for today</h2>
+			<hr />
+		</div>
+	</div>
+	<a href="@($"menu")" class="btn btn-primary">Go to menu</a>
+}

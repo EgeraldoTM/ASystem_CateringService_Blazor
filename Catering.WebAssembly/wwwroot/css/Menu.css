@@ -1,0 +1,139 @@
+﻿.food-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-description {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.item-price {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.item-button {
+    margin: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*    .item-button.added {
+        background-color: transparent;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+    }
+*/
+.manage {
+    text-align: right;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.dashed-line {
+    border: none;
+    border-top: 2px dotted #f00;
+    color: #fff;
+    background-color: #fff;
+    height: 1px;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.menu {
+    /*justify-content:center;*/
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.food-selection{
+    width: 400px;
+    height: 150px;
+}
+
+.item {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+}
+
+.add-button {
+    margin: 0px;
+    /*margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;*/
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    /*padding: 10px 20px;*/
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+}
+
+    .add-button.added {
+        background-color: transparent;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+    }
+
+.subtract-button {
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: red;
+    color: #fff;
+    border: none;
+    padding: 1px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+}
+
+.indicator {
+    float: right;
+    margin-left: 10px;
+}
+
+.subtract-button {
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+}
+
+.submit-button {
+    /*margin-top: 10px;*/
+    background-color: #337ab7;
+    color: #fff;
+    font-size: 14px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+    .submit-button:hover {
+        background-color: #23527c;
+    }
+
+
