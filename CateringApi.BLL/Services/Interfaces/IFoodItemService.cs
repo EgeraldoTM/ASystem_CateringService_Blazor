@@ -6,10 +6,10 @@ namespace CateringApi.BLL.Services.Interfaces
 {
 	public interface IFoodItemService
 	{
-		Task<IEnumerable<FoodItemDto>> GetAllAsync(string? query);
-		Task<FoodItemDto> GetAsync(int id);
-		Task<FoodItemDto> CreateAsync(FoodItemDto foodItem);
-		Task<bool> UpdateAsync(int id, FoodItemDto foodItem);
-		Task<bool> DeleteAsync(int id);
+		Task<IEnumerable<FoodItemDto>> GetAll(string? query);
+		Task<FoodItemDto> Get(int id);
+		Task<FoodItemDto> Create(FoodItemDto foodItem);
+		Task Update(int id, FoodItemDto foodItem);
+		Task Delete(int id);
 	}
 }

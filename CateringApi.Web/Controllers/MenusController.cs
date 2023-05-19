@@ -43,24 +43,18 @@ namespace CateringApi.Web.Controllers
 			if (menu.Date.Date < DateTime.Now.Date)
 				return BadRequest("Cannot create Menu for a day in the past");
 
-			var result = await _service.Create(menu);
+			await _service.Create(menu);
 
-			if (result)
-				return Ok();
-
-			return Problem("Something went wrong, could not create the Menu");
+			return Ok();
 		}
 
 		[HttpPut("{id}")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Cook)]
 		public async Task<IActionResult> Update(int id, [FromBody] MenuRequest menu)
 		{
-			var response = await _service.Update(id, menu);
+			await _service.Update(id, menu);
 
-			if (response)
-				return NoContent();
-
-			return Problem("Something went wrong, could not update the Menu.");
+			return NoContent();
 		}
 
 		[HttpPut("{id}/RemoveFoodItem")]
@@ -79,12 +73,9 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Cook)]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var result = await _service.Delete(id);
+			await _service.Delete(id);
 
-			if (result)
-				return NoContent();
-
-			return Problem("Something went wrong, could not delete the Menu");
+			return NoContent();
 		}
 	}
 }

@@ -45,7 +45,7 @@ namespace CateringApi.BLL.Services
 			return menuDto;
 		}
 
-		public async Task<bool> Create(MenuRequest request)
+		public async Task Create(MenuRequest request)
 		{
 			var foodItems = await _foodItemRepository.FindAsync(f => request.FoodIds.Contains(f.Id));
 			var newMenu = _mapper.Map<MenuRequest, Menu>(request);
@@ -56,11 +56,9 @@ namespace CateringApi.BLL.Services
 			await _unitOfWork.CompleteAsync();
 
 			var menuDto = _mapper.Map<MenuDto>(newMenu);
-
-			return true;
 		}
 
-		public async Task<bool> Update(int id, MenuRequest request)
+		public async Task Update(int id, MenuRequest request)
 		{
 			var menu = await _menuRepository.GetWithFoodItems(id) ?? throw new NotFoundException("Invalid Menu Id");
 
@@ -78,8 +76,6 @@ namespace CateringApi.BLL.Services
 			}
 
 			await _unitOfWork.CompleteAsync();
-
-			return true;
 		}
 
 		//public async Task<ResponseResult<MenuDto>> UpdateDateAsync(int id, DateTime date)
@@ -118,7 +114,7 @@ namespace CateringApi.BLL.Services
 
 		public async Task<bool> RemoveFoodItem(int id, int foodItemId)
 		{
-			var menu = await _menuRepository.GetWithFoodItems(id);
+			var menu = await _menuRepository.GetWithFoodItems(id) ?? throw new NotFoundException("Invalid Menu Id");
 
 			var foodItem = await _foodItemRepository.GetAsync(foodItemId);
 
@@ -133,14 +129,12 @@ namespace CateringApi.BLL.Services
 			return false;
 		}
 
-		public async Task<bool> Delete(int id)
+		public async Task Delete(int id)
 		{
 			var menu = await _menuRepository.GetAsync(id) ?? throw new NotFoundException("Invalid Menu Id");
 
 			menu.IsDeleted = true;
 			await _unitOfWork.CompleteAsync();
-
-			return true;
 		}
 
 		//private async Menu MapFoodIds(IEnumerable<int> source, )

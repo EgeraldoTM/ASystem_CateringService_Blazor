@@ -22,7 +22,7 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		public async Task<IActionResult> GetAll(string? query = null)
 		{
-			var response = await _service.GetAllAsync(query);
+			var response = await _service.GetAll(query);
 
 			return Ok(response);
 		}
@@ -31,7 +31,7 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		public async Task<IActionResult> Get(int id)
 		{
-			var response = await _service.GetAsync(id);
+			var response = await _service.Get(id);
 
 			return Ok(response);
 		}
@@ -41,7 +41,7 @@ namespace CateringApi.Web.Controllers
 
 		public async Task<IActionResult> Create([FromBody] FoodItemDto foodItem)
 		{
-			var response = await _service.CreateAsync(foodItem);
+			var response = await _service.Create(foodItem);
 
 			return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
 		}
@@ -50,24 +50,18 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Cook)]
 		public async Task<IActionResult> Update(int id, [FromBody] FoodItemDto foodItem)
 		{
-			var response = await _service.UpdateAsync(id, foodItem);
+			await _service.Update(id, foodItem);
 
-			if (response)
-				return NoContent();
-
-			return Problem("Something went wrong, could not update the Food Item");
+			return NoContent();
 		}
 
 		[HttpDelete("{id}")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Cook)]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var response = await _service.DeleteAsync(id);
+			await _service.Delete(id);
 
-			if (response)
-				return NoContent();
-
-			return Problem("Something went wrong, could not delete the Food Item");
+			return NoContent();
 		}
 	}
 }

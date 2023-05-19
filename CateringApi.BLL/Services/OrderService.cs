@@ -34,26 +34,22 @@ namespace CateringApi.BLL.Services
 			return null;
 		}
 
-		public async Task<bool> Create(CreateOrderRequest request)
+		public async Task Create(CreateOrderRequest request)
 		{
 			var newOrder = _mapper.Map<CreateOrderRequest, Order>(request);
 
 			_repository.Add(newOrder);
 
 			await _unitOfWork.CompleteAsync();
-
-			return true;
 		}
 
-		public async Task<bool> Update(int id, UpdateOrderRequest request)
+		public async Task Update(int id, UpdateOrderRequest request)
 		{
 			var order = await _repository.GetWithDetails(id) ?? throw new NotFoundException("Invalid Order Id.");
 
 			_mapper.Map(request, order);
 
 			await _unitOfWork.CompleteAsync();
-
-			return true;
 		}
 
 		public async Task<bool> AddQuantity(int id, int detailId)
@@ -103,14 +99,12 @@ namespace CateringApi.BLL.Services
 			return false;
 		}
 
-		public async Task<bool> Delete(int id)
+		public async Task Delete(int id)
 		{
 			var order = await _repository.GetAsync(id) ?? throw new NotFoundException("Invalid Order Id");
 
 			order.IsDeleted = true;
 			await _unitOfWork.CompleteAsync();
-
-			return true;
 		}
 	}
 }

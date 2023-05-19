@@ -7,9 +7,9 @@ namespace CateringApi.BLL.Services.Interfaces
 	{
 		Task<MenuDto?> GetForSpecificDay(DateTime? date = null);
 		Task<MenuDto?> Get(int id);
-		Task<bool> Create(MenuRequest request);
-		Task<bool> Update(int id, MenuRequest request);
+		Task Create(MenuRequest request);
+		Task Update(int id, MenuRequest request);
 		Task<bool> RemoveFoodItem (int  id, int foodItemId);
-		Task<bool> Delete(int id);
+		Task Delete(int id);
 	}
 }

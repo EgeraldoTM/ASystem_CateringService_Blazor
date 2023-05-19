@@ -35,24 +35,18 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Employee)]
 		public async Task<IActionResult> Create([FromBody] CreateOrderRequest order)
 		{
-			var result = await _service.Create(order);
+			await _service.Create(order);
 
-			if (result)
-				return Ok();
-
-			return Problem("Something went wrong, could not create Order");
+			return Ok();
 		}
 
 		[HttpPut("{id}")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Employee)]
 		public async Task<IActionResult> Update(int id, [FromBody] UpdateOrderRequest order)
 		{
-			var response = await _service.Update(id, order);
+			await _service.Update(id, order);
 
-			if (response)
-				return NoContent();
-
-			return Problem("Something went wrong, could not update Order.");
+			return NoContent();
 		}
 
 		[HttpPut("{id}/AddQuantity")]
@@ -66,7 +60,7 @@ namespace CateringApi.Web.Controllers
 
 			return Problem("Something went wrong, could not update Order.");
 		}
-		
+
 		[HttpPut("{id}/SubtractQuantity")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Employee)]
 		public async Task<IActionResult> SubtractQuantity(int id, [FromBody] int detailId)
@@ -85,7 +79,7 @@ namespace CateringApi.Web.Controllers
 		{
 			var result = await _service.RemoveDetail(id, detailId);
 
-			if(result)
+			if (result)
 				return NoContent();
 
 			return Problem("Something went wrong, could not update Order.");
@@ -95,12 +89,9 @@ namespace CateringApi.Web.Controllers
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleName.Employee)]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var response = await _service.Delete(id);
+			await _service.Delete(id);
 
-			if (response)
-				return NoContent();
-
-			return Problem("Something went wrong, could not delete Order");
+			return NoContent();
 		}
 	}
 }
