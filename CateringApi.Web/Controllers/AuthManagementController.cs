@@ -93,7 +93,7 @@ namespace CateringApi.Web.Controllers
 					});
 				}
 
-				var validPassword = await _userManager.CheckPasswordAsync(existingUser, user.Password);
+				 var validPassword = await _userManager.CheckPasswordAsync(existingUser, user.Password);
 
 				if (!validPassword)
 				{

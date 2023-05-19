@@ -1,5 +1,8 @@
 ﻿using CateringApi.DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CateringApi.DAL.Seed
 {
@@ -12,34 +15,45 @@ namespace CateringApi.DAL.Seed
 
 			var categories = new Category[]
 			{
-				new Category { Id = 1, Name = "Salads" },
-				new Category { Id = 2, Name = "Entrees" },
-				new Category { Id = 3, Name = "Deserts" },
-				new Category { Id = 4, Name = "Beverages" },
-				new Category { Id = 5, Name = "Fruits" },
-				new Category { Id = 5, Name = "Fruits" }
+				new Category {  Name = "Salads" },
+				new Category {  Name = "Entrees" },
+				new Category { Name = "Deserts" },
+				new Category { Name = "Beverages" },
+				new Category { Name = "Fruits" }
 			};
 
-			var employeeRole = new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "employee" };
-			var cookRole = new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "cook" };
-			//var admin = new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "admin" };
+			//var adminRole = "admin";
 
-			var roles = new IdentityRole[]
+			var roles = new string[] { "cook", "employee" };
+
+			foreach (var role in roles)
 			{
-				cookRole,
-				employeeRole
-			};
+				var roleStore = new RoleStore<IdentityRole>(context);
+				roleStore.CreateAsync(new IdentityRole { Name = role, NormalizedName = role.ToUpper()});
+			}
 
+			var cook = new User
+			{
+				FirstName = "Cook",
+				LastName = string.Empty,
+				Email = "cook@catering.com",
+				NormalizedEmail = "COOK@CATERING.COM",
+				UserName = "chef",
+				NormalizedUserName = "CHEF",
+				EmailConfirmed = true,
+				Birthday = new DateTime(1980, 06, 05),
+				SecurityStamp = Guid.NewGuid().ToString("D")
+			};
 			var hasher = new PasswordHasher<User>();
-			var cook = new User { Id = Guid.NewGuid().ToString(), FirstName = "Cook", LastName = string.Empty, Birthday = new DateTime(1980, 06, 05) };
 			cook.PasswordHash = hasher.HashPassword(cook, "Coding@2023");
 
-			var userRole = new IdentityUserRole<string> { UserId = cook.Id, RoleId = cookRole.Id };
+			var userStore = new UserStore<User>(context);
+			userStore.CreateAsync(cook);
+			userStore.AddToRoleAsync(cook, roles[0]);
 
 			context.Categories.AddRange(categories);
-			context.Roles.AddRange(roles);
-			context.Users.Add(cook);
-			context.UserRoles.Add(userRole);
+
+			context.SaveChanges();
 		}
 	}
 }

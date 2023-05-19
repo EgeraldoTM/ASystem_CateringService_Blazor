@@ -17,7 +17,7 @@ namespace CateringApi.Helpers.Common.DTOs
         [Range(0, 200)]
         public decimal Price { get; set; }
 
-        [Range(1, 10, ErrorMessage = "Please select a valid category")]
+        [Range(1, int.MaxValue - 10, ErrorMessage = "Please select a valid category")]
         public int CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
     }
